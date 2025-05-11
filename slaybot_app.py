@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 from openai import OpenAI
-import pandas as pd
 import shelve
 import streamlit as stream
 import os
@@ -32,7 +31,7 @@ with stream.sidebar:
         save_chat_history([])
         stream.session_state.skin_type = None
 
-# Initial message displayed 
+# Initial Message
 if len(stream.session_state.messages) == 0:
     welcome = (
         "I'm here to help you with your skincare needs. "
@@ -40,12 +39,11 @@ if len(stream.session_state.messages) == 0:
     )
     stream.session_state.messages.append({"role": "assistant", "content": welcome})
 
-# Display chat history | Method called later during main chat 
+# If history present display
 for msg in stream.session_state.messages:
     with stream.chat_message(USER_AVATAR if msg["role"] == "user" else BOT_AVATAR):
         stream.markdown(msg["content"])
 
-# Letting user select the skin type 
 if "user_profile_completed" not in stream.session_state:
     stream.session_state.user_profile_completed = False
 
@@ -68,8 +66,7 @@ if not stream.session_state.user_profile_completed:
         stream.session_state.preferences = preferences
         stream.session_state.User_profile_completed = True
 
-
-        # Update the profile display
+        # Displaying the updated profile 
         stream.subheader("Here's your profile:")
         stream.markdown(f"**Skin Type:** {stream.session_state.skin_type}")
         stream.markdown(f"**Age Range:** {stream.session_state.age}")
@@ -95,7 +92,7 @@ if not stream.session_state.user_profile_completed:
         with stream.chat_message("user"):
             stream.markdown(prompt)    
 
-        # Construct prompt with user profile
+        # Main prompt
         full_prompt = (
             f"You are a helpful skincare advisor called SlayBot.\n\n"
             f"User Profile:\n"
